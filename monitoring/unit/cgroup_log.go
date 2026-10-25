@@ -10,11 +10,14 @@ var cgroupLogOnce sync.Once
 // logCgroupModeOnce emits exactly one diagnostic line per process lifetime,
 // on the first monitoring call, so the effective cgroup values can be
 // verified from the agent log inside the container. Unavailable values
-// are printed as -1.
+// are printed as -1. mem_total is the value Ram() actually reports,
+// i.e. after the --mem-total-mb override when one is configured.
 func logCgroupModeOnce() {
 	cgroupLogOnce.Do(func() {
 		memTotal, memUsed := int64(-1), int64(-1)
-		if v, ok := cgroupMemoryLimit(); ok {
+		if override := memTotalOverride(); override > 0 {
+			memTotal = int64(override)
+		} else if v, ok := cgroupMemoryLimit(); ok {
 			memTotal = int64(v)
 		}
 		if v, ok := cgroupMemoryUsed(); ok {

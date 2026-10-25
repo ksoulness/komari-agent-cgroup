@@ -202,6 +202,7 @@ func init() {
 	RootCmd.PersistentFlags().StringVar(&flags.PreferIPVersion, "prefer-ip-version", "", "Prefer IP version for dashboard connections: 4 or 6")
 	RootCmd.PersistentFlags().IntVar(&flags.DiskTotalMB, "disk-total-mb", 0, "[cgroup patch] Override reported disk total in MB (0 = disabled)")
 	RootCmd.PersistentFlags().StringVar(&flags.DiskPath, "disk-path", "", "[cgroup patch] Directory whose recursive size is reported as disk used (default: working directory)")
+	RootCmd.PersistentFlags().IntVar(&flags.MemTotalMB, "mem-total-mb", 0, "[cgroup patch] Override reported memory total with the plan value in MB (0 = disabled)")
 	RootCmd.PersistentFlags().ParseErrorsWhitelist.UnknownFlags = true
 }
 

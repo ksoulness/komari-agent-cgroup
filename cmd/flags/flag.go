@@ -30,6 +30,7 @@ type Config struct {
 	PreferIPVersion     string  `json:"prefer_ip_version" env:"AGENT_PREFER_IP_VERSION"`           // 面板连接优先使用的 IP 版本：4 或 6
 	DiskTotalMB         int     `json:"disk_total_mb" env:"AGENT_DISK_TOTAL_MB"`                   // [cgroup patch] 磁盘总量覆盖（MB），0 表示禁用
 	DiskPath            string  `json:"disk_path" env:"AGENT_DISK_PATH"`                           // [cgroup patch] 磁盘用量统计目录，空表示进程工作目录
+	MemTotalMB          int     `json:"mem_total_mb" env:"AGENT_MEM_TOTAL_MB"`                     // [cgroup patch] 内存总量覆盖为套餐名义值（MB），0 表示禁用
 
 }
 

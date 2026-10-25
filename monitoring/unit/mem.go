@@ -181,7 +181,31 @@ func CallFree() RamInfo {
 	return raminfo
 }
 
+// memTotalOverride returns the --mem-total-mb plan value in bytes, or 0
+// when the override is disabled.
+func memTotalOverride() uint64 {
+	if pkg_flags.GlobalConfig.MemTotalMB <= 0 {
+		return 0
+	}
+	return uint64(pkg_flags.GlobalConfig.MemTotalMB) * 1024 * 1024
+}
+
 func Ram() RamInfo {
+	info := ramBase()
+	// cgroup patch: with --mem-total-mb set, pin the reported total to
+	// the plan value (the kernel cgroup limit enforced on the host can
+	// be higher than the nominal plan quota) and clamp used to the
+	// total so the panel percentage never exceeds 100%.
+	if override := memTotalOverride(); override > 0 {
+		info.Total = override
+		if info.Used > info.Total {
+			info.Used = info.Total
+		}
+	}
+	return info
+}
+
+func ramBase() RamInfo {
 	logCgroupModeOnce()
 	// cgroup patch: when a memory limit is in effect, report container
 	// numbers instead of the host's /proc/meminfo values.
